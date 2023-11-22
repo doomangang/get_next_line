@@ -6,7 +6,13 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/21 19:07:33 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/21 19:16:38 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
+char	*get_next_line(int fd)
+{
+	static int	buf;
+}
