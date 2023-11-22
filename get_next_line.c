@@ -6,59 +6,60 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/22 23:57:55 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/23 00:57:25 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t strlcat(char *dst, char *src)
+size_t	ft_strlcat(char *dst, char *src, size_t len)
 {
-	char *d;
-	char *s;
-	size_t n;
-	size_t dlen;
+	char	*d;
+	char	*s;
+	size_t	n;
+	size_t	dlen;
 
-	d= dst;
-	
+	d = dst;
 	while (n-- && *d != '\0')
 		d++;
 	dlen = d - dst;
 	n = len - dlen;
-
 	if (n == 0)
-		return(dlen + strlen(s));
-	while (*s != '\0') {
-		if (n != 1) {
+		return (dlen + ft_strlen(s));
+	while (*s) 
+	{
+		if (n != 1)
+		{
 			*d++ = *s;
 			n--;
 		}
 		s++;
 	}
 	*d = '\0';
-
-	return(dlen + (s - src));	/* count does not include NUL */
+	return (dlen + (s - src));
 }
 
-char	*read_a_line(int fd)
+char	*read_a_line(int fd, char *rmd)
 {
 	char	*line;
 	char	*buf;
+	ssize_t	b_len;
 
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (0);
-	while (42)
+	b_len = read(fd, buf, BUFFER_SIZE);
+	while (b_len)
 	{
-		if (read(fd, buf, BUFFER_SIZE) < 0)
-			return (0);
-		line = ft_strlcat(line, buf);
+		line = ft_strlcat(line, buf, ft_strlen(line) + ft_newline(buf) + 1);
 		if (ft_newline(buf) == BUFFER_SIZE)
-			continue ;
+			b_len = read(fd, buf, BUFFER_SIZE);
 		else
 			break ;
 	}
 	free(buf);
+	if (b_len < 0)
+		return (0);
 	return (line);
 }
 
