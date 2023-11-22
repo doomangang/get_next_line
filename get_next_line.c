@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/22 23:55:41 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/22 23:57:55 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,6 @@ size_t strlcat(char *dst, char *src)
 	return(dlen + (s - src));	/* count does not include NUL */
 }
 
-void	*ft_memset(void *str, int c, size_t len)
-{
-	unsigned char	*s;
-
-	s = str;
-	while (len--)
-		*(s++) = (unsigned char)c;
-	return (str);
-}
-
 char	*read_a_line(int fd)
 {
 	char	*line;
@@ -60,7 +50,6 @@ char	*read_a_line(int fd)
 		return (0);
 	while (42)
 	{
-		ft_memset(buf, 0, BUFFER_SIZE);
 		if (read(fd, buf, BUFFER_SIZE) < 0)
 			return (0);
 		line = ft_strlcat(line, buf);
