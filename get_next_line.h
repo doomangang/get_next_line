@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:00:42 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/22 16:07:57 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/22 19:19:39 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,10 @@
 # endif
 
 char	*get_next_line(int fd);
-size_t	ft_strchr(char *s);
+char	*ft_findstr(int fd, size_t nfh);
+size_t	ft_newline(char *s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+size_t	len_cmp(char const *str, size_t len);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+
 #endif
