@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/24 19:07:03 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 22:33:40 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_newline(char *s, ssize_t blen)
 	size_t	idx;
 
 	idx = 0;
-	while (idx != blen)
+	while (idx != (size_t)blen)
 	{
 		if (*(s + idx) == '\n')
 			break ;
@@ -34,21 +34,11 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	if (ft_strlen(s + (size_t)start) < len)
 		len = ft_strlen(s + (size_t)start);
-	str = (char *)ft_calloc(sizeof(char), len + 1);
+	str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!(str))
 		return (0);
 	ft_strlcpy(str, s + (size_t)start, len + 1);
 	return (str);
-}
-
-size_t	ft_strlen(char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (*(s + len))
-		len++;
-	return (len);
 }
 
 char	*ft_strjoin(char *s1, char *s2, size_t len)
@@ -76,6 +66,7 @@ char	*ft_strjoin(char *s1, char *s2, size_t len)
 		idx++;
 	}
 	*tmp = '\0';
+	free(s1);
 	return (new);
 }
 
@@ -90,4 +81,23 @@ char	*ft_strdup(char *src)
 		return (0);
 	ft_strlcpy(ptr, src, len + 1);
 	return (ptr);
+}
+
+size_t	ft_strlcpy(char *dst, char *src, size_t size)
+{
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = 0;
+	while (*(src + len))
+		len ++;
+	while (*(src + i) && i + 1 < size)
+	{
+		*(dst + i) = *(src + i);
+		i ++;
+	}
+	if (size > 0)
+		*(dst + i) = '\0';
+	return (len);
 }
