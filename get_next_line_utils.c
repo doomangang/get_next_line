@@ -6,25 +6,11 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/24 22:33:40 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 22:53:39 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-size_t	ft_newline(char *s, ssize_t blen)
-{
-	size_t	idx;
-
-	idx = 0;
-	while (idx != (size_t)blen)
-	{
-		if (*(s + idx) == '\n')
-			break ;
-		idx++;
-	}
-	return (idx);
-}
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
@@ -85,19 +71,43 @@ char	*ft_strdup(char *src)
 
 size_t	ft_strlcpy(char *dst, char *src, size_t size)
 {
-	size_t	i;
 	size_t	len;
 
-	i = 0;
-	len = 0;
-	while (*(src + len))
-		len ++;
-	while (*(src + i) && i + 1 < size)
+	len = ft_strlen(src);
+	if (len + 1 < size)
+		ft_memcpy(dst, src, len + 1);
+	else if (size != 0)
 	{
-		*(dst + i) = *(src + i);
-		i ++;
+		ft_memcpy(dst, src, size - 1);
+		dst[size - 1] = '\0';
 	}
-	if (size > 0)
-		*(dst + i) = '\0';
 	return (len);
+}
+
+void	*ft_memcpy(void *dst, void *src, size_t n)
+{
+	unsigned char	*d;
+	unsigned char	*s;	
+
+	d = dst;
+	s = (unsigned char *)src;
+	if (!d && !s)
+		return (0);
+	if (d < s || d >= (s + n))
+	{
+		while (n--)
+		{
+			*(d++) = *(s++);
+		}
+	}
+	else
+	{
+		d += n;
+		s += n;
+		while (n--)
+		{
+			*(--d) = *(--s);
+		}
+	}
+	return (dst);
 }

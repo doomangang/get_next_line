@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/24 22:24:09 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 22:52:15 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	if (ft_newline(remainder, ft_strlen(remainder)) != ft_strlen(remainder))
+	if (where_is_newline(remainder, ft_strlen(remainder)) != ft_strlen(remainder))
 	{
-		this_line = remainder;
+		this_line = ft_strdup(remainder);
 		free(remainder);
 	}
 	else
@@ -44,7 +44,7 @@ char	*read_a_line(int fd, char *rmd, char *buf)
 
 	line = ft_strdup(rmd);
 	b_len = read(fd, buf, BUFFER_SIZE);
-	wrd_len = ft_newline(buf, b_len);
+	wrd_len = where_is_newline(buf, b_len);
 	while (b_len > 0)
 	{
 		line = join_the_buf(line, buf, wrd_len);
@@ -71,10 +71,26 @@ char	*join_the_buf(char *line, char *buf, size_t wlen)
 	return (new_line);
 }
 
+size_t	where_is_newline(char *s, ssize_t blen)
+{
+	size_t	idx;
+
+	idx = 0;
+	while (idx != (size_t)blen)
+	{
+		if (*(s + idx) == '\n')
+			break ;
+		idx++;
+	}
+	return (idx);
+}
+
 size_t	ft_strlen(char *s)
 {
 	size_t	len;
 
+	if (!s)
+		return (0);
 	len = 0;
 	while (*(s + len))
 		len++;
