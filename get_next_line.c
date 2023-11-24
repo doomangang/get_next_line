@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/24 21:05:12 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 21:28:36 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ char	*read_a_line(int fd, char *rmd, char *buf)
 	size_t	wrd_len;
 
 	if (ft_newline(rmd, ft_strlen(rmd)))
-	{
-	}
+		;
 	b_len = read(fd, buf, BUFFER_SIZE);
 	wrd_len = ft_newline(buf, b_len);
 	while (b_len > 0)
