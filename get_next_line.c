@@ -3,73 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/23 00:57:25 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 21:05:12 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_strlcat(char *dst, char *src, size_t len)
-{
-	char	*d;
-	char	*s;
-	size_t	n;
-	size_t	dlen;
-
-	d = dst;
-	while (n-- && *d != '\0')
-		d++;
-	dlen = d - dst;
-	n = len - dlen;
-	if (n == 0)
-		return (dlen + ft_strlen(s));
-	while (*s) 
-	{
-		if (n != 1)
-		{
-			*d++ = *s;
-			n--;
-		}
-		s++;
-	}
-	*d = '\0';
-	return (dlen + (s - src));
-}
-
-char	*read_a_line(int fd, char *rmd)
-{
-	char	*line;
-	char	*buf;
-	ssize_t	b_len;
-
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
-		return (0);
-	b_len = read(fd, buf, BUFFER_SIZE);
-	while (b_len)
-	{
-		line = ft_strlcat(line, buf, ft_strlen(line) + ft_newline(buf) + 1);
-		if (ft_newline(buf) == BUFFER_SIZE)
-			b_len = read(fd, buf, BUFFER_SIZE);
-		else
-			break ;
-	}
-	free(buf);
-	if (b_len < 0)
-		return (0);
-	return (line);
-}
-
 char	*get_next_line(int fd)
 {
 	char		*this_line;
+	char		*buf;
 	static char	*remainder;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	this_line = read_a_line(fd, remainder);
+	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
+		return (0);
+	this_line = read_a_line(fd, remainder, buf);
 	return (this_line);
+}
+
+char	*read_a_line(int fd, char *rmd, char *buf)
+{
+	char	*line;
+	ssize_t	b_len;
+	size_t	wrd_len;
+
+	if (ft_newline(rmd, ft_strlen(rmd)))
+	{
+	}
+	b_len = read(fd, buf, BUFFER_SIZE);
+	wrd_len = ft_newline(buf, b_len);
+	while (b_len > 0)
+	{
+		line = join_the_buf(line, buf, b_len, wrd_len);
+		if (wrd_len != b_len)
+			break ;
+		b_len = read(fd, buf, BUFFER_SIZE);
+	}
+	rmd = ft_substr(buf, wrd_len, b_len - wrd_len);
+	free(buf);
+	if (b_len < 0)
+	{
+		free(line);
+		return (0);
+	}
+	return (line);
+}
+
+char	*join_the_buf(char *line, char *buf, ssize_t blen, size_t wlen)
+{
+	char	*new_line;
+
+	if (wlen == BUFFER_SIZE)
+		wlen--;
+	new_line = ft_strjoin(line, buf, wlen);
+	return (new_line);
 }

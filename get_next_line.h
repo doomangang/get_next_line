@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:00:42 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/22 19:19:39 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 19:05:42 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@
 # endif
 
 char	*get_next_line(int fd);
-char	*ft_findstr(int fd, size_t nfh);
-size_t	ft_newline(char *s);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-size_t	len_cmp(char const *str, size_t len);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*read_a_line(int fd, char *rmd, char *buf);
+char	*join_the_buf(char *line, char *buf, ssize_t blen, size_t wrd_len);
+char	*check_rmd(char *rmd);
+size_t	ft_newline(char *s, ssize_t blen);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+size_t	ft_strlen(char *s);
+char	*ft_strjoin(char *s1, char *s2, size_t len);
+char	*ft_strdup(char *src);
 
 #endif

@@ -3,30 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/23 00:57:42 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/24 19:07:03 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-size_t	ft_newline(char *s)
+size_t	ft_newline(char *s, ssize_t blen)
 {
 	size_t	idx;
 
 	idx = 0;
-	while (idx != BUFFER_SIZE)
+	while (idx != blen)
 	{
 		if (*(s + idx) == '\n')
-			return (idx);
+			break ;
 		idx++;
 	}
 	return (idx);
 }
 
-size_t	ft_strlen(const char *s)
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*str;
+
+	if (!len || ft_strlen(s) <= (size_t)start)
+		return (ft_strdup(""));
+	if (ft_strlen(s + (size_t)start) < len)
+		len = ft_strlen(s + (size_t)start);
+	str = (char *)ft_calloc(sizeof(char), len + 1);
+	if (!(str))
+		return (0);
+	ft_strlcpy(str, s + (size_t)start, len + 1);
+	return (str);
+}
+
+size_t	ft_strlen(char *s)
 {
 	size_t	len;
 
@@ -36,32 +51,43 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+char	*ft_strjoin(char *s1, char *s2, size_t len)
 {
-	size_t	len;
+	char	*new;
+	char	*tmp;
+	size_t	idx;
 
-	len = ft_strlen(src);
-	if (len + 1 < size)
-		ft_memcpy(dst, src, len + 1);
-	else if (size != 0)
+	new = (char *)malloc(sizeof(char) * (ft_strlen(s1) + len + 1));
+	if (!(new))
+		return (0);
+	tmp = new;
+	idx = 0;
+	while (*s1)
 	{
-		ft_memcpy(dst, src, size - 1);
-		dst[size - 1] = '\0';
+		*tmp = *s1;
+		s1++;
+		tmp++;
 	}
-	return (len);
+	while (*s2 && idx != len)
+	{
+		*tmp = *s2;
+		s2++;
+		tmp++;
+		idx++;
+	}
+	*tmp = '\0';
+	return (new);
 }
 
-char	*ft_findstr(int fd, static size_t nfh)
+char	*ft_strdup(char *src)
 {
-	char	*buf;
-	size_t	fd;
+	size_t	len;
+	char	*ptr;
 
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	fd = read(fd, buf, BUFFER_SIZE);
-	if (fd <= 0)
+	len = ft_strlen(src);
+	ptr = (char *)malloc(sizeof(char) * (len + 1));
+	if (!(ptr))
 		return (0);
-	nfh = 0;
-	nfh += ft_newline(buf) + 1;
-	this_line = (char *)malloc(sizeof(char) * (nfh + 1));
-	ft_strlcpy(this_line, buf, nfh + 1);
+	ft_strlcpy(ptr, src, len + 1);
+	return (ptr);
 }
