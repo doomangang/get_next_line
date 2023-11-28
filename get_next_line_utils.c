@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/24 22:53:39 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/25 17:41:33 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	char	*str;
 
 	if (!len || ft_strlen(s) <= (size_t)start)
-		return (ft_strdup(""));
+		return (ft_strdup(0));
 	if (ft_strlen(s + (size_t)start) < len)
 		len = ft_strlen(s + (size_t)start);
 	str = (char *)malloc(sizeof(char) * (len + 1));
