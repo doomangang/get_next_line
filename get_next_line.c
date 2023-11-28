@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/28 17:45:27 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/28 21:00:44 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ char	*get_next_line(int fd)
 	char		*buf;
 	static char	*remainder;
 	ssize_t		buf_len;
-	ssize_t		rmd_nl;
 
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
@@ -29,18 +28,7 @@ char	*get_next_line(int fd)
 		free(buf);
 		return (0);
 	}
-	rmd_nl = newline_seeker(remainder, ft_strlen(remainder));
-	if (rmd_nl >= 0)
-	{
-		this_line = (char *)malloc(sizeof(char) * (rmd_nl + 1));
-		if (!this_line)
-			return (0);
-		ft_strlcpy(this_line, remainder, rmd_nl + 1);
-		free(remainder);
-		remainder = ft_substr(remainder, rmd_nl, ft_strlen(remainder) - rmd_nl);
-	}
-	else
-		this_line = read_a_line(fd, remainder, buf, buf_len);
+	this_line = read_a_line(fd, remainder, buf, buf_len);
 	free(buf);
 	return (this_line);
 }
@@ -48,43 +36,37 @@ char	*get_next_line(int fd)
 char	*read_a_line(int fd, char *rmd, char *buf, ssize_t b_len)
 {
 	char	*line;
-	size_t	wrd_len;
 
-	line = ft_strdup(rmd);
-	b_len = read(fd, buf, BUFFER_SIZE);
-	wrd_len = newline_seeker(buf, b_len);
-	while (b_len > 0)
+	if (rmd)
 	{
-		line = join_the_buf(line, buf, wrd_len);
-		if (wrd_len >= 0)
-			break ;
-		b_len = read(fd, buf, BUFFER_SIZE);
+		line = ft_strdup(rmd);
+		free(rmd);
+		rmd = NULL;
 	}
-	rmd = ft_substr(buf, wrd_len, b_len - wrd_len);
 	if (b_len < 0)
 	{
 		free(line);
 		return (0);
 	}
-	return (line);
+	line = join_the_buf(line, buf, rmd, b_len);
+
 }
 
-char	*join_the_buf(char *line, char *buf, size_t wlen)
+char	*join_the_buf(char *line, char *buf, char *rmd, ssize_t b_len)
 {
 	char	*new_line;
 
-	if (wlen == BUFFER_SIZE)
-		wlen--;
-	new_line = ft_strjoin(line, buf, wlen);
+	new_line = ft_strjoin(line, buf);
+	free(line);
 	return (new_line);
 }
 
-size_t	newline_seeker(char *s, ssize_t blen)
+size_t	newline_seeker(char *s)
 {
 	size_t	idx;
 
 	idx = 0;
-	while (idx != (size_t)blen)
+	while (*s)
 	{
 		if (*(s + idx) == '\n')
 			return (idx);

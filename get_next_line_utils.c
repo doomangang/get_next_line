@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/11/25 17:41:33 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/11/28 21:00:54 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	return (str);
 }
 
-char	*ft_strjoin(char *s1, char *s2, size_t len)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*new;
 	char	*tmp;
 	size_t	idx;
 
-	new = (char *)malloc(sizeof(char) * (ft_strlen(s1) + len + 1));
+	new = (char *)malloc(sizeof(char) * (ft_strlen(s1) + BUFFER_SIZE + 1));
 	if (!(new))
 		return (0);
 	tmp = new;
@@ -44,7 +44,7 @@ char	*ft_strjoin(char *s1, char *s2, size_t len)
 		s1++;
 		tmp++;
 	}
-	while (*s2 && idx != len)
+	while (*s2)
 	{
 		*tmp = *s2;
 		s2++;
@@ -52,7 +52,6 @@ char	*ft_strjoin(char *s1, char *s2, size_t len)
 		idx++;
 	}
 	*tmp = '\0';
-	free(s1);
 	return (new);
 }
 
