@@ -1,0 +1,9 @@
+b_len, rmd
+where to handle rmd
+1. read_a_line
+2. join_the_buf
+when 1)
+
+- when remainder includes a newline
+	cut the line, put the rest in remainder then return the line
+and if rmd has no newline,

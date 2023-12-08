@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/12/04 19:20:54 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2023/12/07 18:07:57 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,34 @@ char	*read_a_line(int fd, char *rmd, char *buf, ssize_t b_len)
 		return (0);
 	}
 	line = join_the_buf(line, buf, rmd, b_len);
+	if (b_len == BUFFER_SIZE)
+		b_len = read(fd, buf, BUFFER_SIZE);
+	else
+		return (line);
+	return (read_a_line(fd, rmd, buf, b_len));
 }
 
 char	*join_the_buf(char *line, char *buf, char *rmd, ssize_t b_len)
 {
 	char	*new_line;
+	char	*tmp;
+	ssize_t	nl;
 
-	new_line = ft_strjoin(line, buf);
+	new_line = ft_strjoin(line, buf, b_len);
+	nl = newline_seeker(new_line);
+	if (nl >= 0)
+	{
+		rmd = ft_substr(new_line, nl + 1, ft_strlen(new_line) - nl - 1);
+		tmp = new_line;
+		new_line = ft_substr(new_line, 0, nl + 1);
+		free(tmp);
+		return (new_line);
+	}
 	free(line);
 	return (new_line);
 }
 
-size_t	newline_seeker(char *s)
+ssize_t	newline_seeker(char *s)
 {
 	size_t	idx;
 
