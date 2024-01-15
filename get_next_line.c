@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/12/07 18:07:57 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/15 22:37:58 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ char	*get_next_line(int fd)
 	}
 	if (remainder)
 	{
-		this_line = ft_strdup(remainder);
+		this_line = ft_substr(remainder, 0, ft_strlen(remainder));
 		free(remainder);
 		remainder = NULL;
 	}
 	this_line = read_a_line(fd, remainder, buf, buf_len);
 	free(buf);
+	buf = NULL;
 	return (this_line);
 }
 
@@ -46,14 +47,18 @@ char	*read_a_line(int fd, char *rmd, char *buf, ssize_t b_len)
 	if (b_len < 0)
 	{
 		free(line);
+		line = NULL;
 		return (0);
 	}
+	while (b_len == BUFFER_SIZE)
+	{
 	line = join_the_buf(line, buf, rmd, b_len);
 	if (b_len == BUFFER_SIZE)
 		b_len = read(fd, buf, BUFFER_SIZE);
 	else
-		return (line);
-	return (read_a_line(fd, rmd, buf, b_len));
+		break;
+	}
+	return (line);
 }
 
 char	*join_the_buf(char *line, char *buf, char *rmd, ssize_t b_len)
@@ -70,9 +75,11 @@ char	*join_the_buf(char *line, char *buf, char *rmd, ssize_t b_len)
 		tmp = new_line;
 		new_line = ft_substr(new_line, 0, nl + 1);
 		free(tmp);
+		tmp = NULL;
 		return (new_line);
 	}
 	free(line);
+	line = NULL;
 	return (new_line);
 }
 
