@@ -6,18 +6,30 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2023/12/29 22:51:43 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/20 17:56:14 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t	ft_strlen(char *s)
+{
+	size_t	len;
+
+	if (!s)
+		return (0);
+	len = 0;
+	while (*(s + len))
+		len++;
+	return (len);
+}
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*str;
 
 	if (!len || ft_strlen(s) <= (size_t)start)
-		return (ft_substr("", 0, 0));
+		return (NULL);
 	if (ft_strlen(s + (size_t)start) < len)
 		len = ft_strlen(s + (size_t)start);
 	str = (char *)malloc(sizeof(char) * (len + 1));
@@ -33,6 +45,8 @@ char	*ft_strjoin(char *s1, char *s2, ssize_t blen)
 	char	*tmp;
 	ssize_t	idx;
 
+	if (!s1)
+		return (ft_memcpy((char *)malloc(ft_strlen(s2) + 1), s2, ft_strlen(s2)));
 	new = (char *)malloc(sizeof(char) * (ft_strlen(s1) + blen + 1));
 	if (!(new))
 		return (0);
@@ -82,4 +96,10 @@ void	*ft_memcpy(void *dst, void *src, size_t n)
 	}
 	*(char *)(dst + n) = '\0';
 	return (dst);
+}
+
+void	free_ptr(char *ptr)
+{
+	free(ptr);
+	ptr = NULL;
 }
