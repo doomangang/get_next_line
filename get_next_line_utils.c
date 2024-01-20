@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:59:38 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/20 17:56:14 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/20 22:56:51 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,12 @@ char	*ft_strjoin(char *s1, char *s2, ssize_t blen)
 	idx = 0;
 	while (*s1)
 	{
-		*tmp = *s1;
-		s1++;
+		*tmp = *(s1++);
 		tmp++;
 	}
 	while (*s2 && idx != blen)
 	{
-		*tmp = *s2;
-		s2++;
+		*tmp = *(s2++);
 		tmp++;
 		idx++;
 	}
@@ -81,18 +79,14 @@ void	*ft_memcpy(void *dst, void *src, size_t n)
 	if (d < s || d >= (s + n))
 	{
 		while (n--)
-		{
 			*(d++) = *(s++);
-		}
 	}
 	else
 	{
 		d += n;
 		s += n;
 		while (n--)
-		{
 			*(--d) = *(--s);
-		}
 	}
 	*(char *)(dst + n) = '\0';
 	return (dst);

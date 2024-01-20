@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/20 17:56:18 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/20 22:56:49 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ char	*get_next_line(int fd)
 	char		*buf;
 	static char	*remainder;
 	ssize_t		buf_len;
-	size_t		nl;
+	ssize_t		nl;
 
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (0);
 	buf_len = read(fd, buf, BUFFER_SIZE);
 	this_line = NULL;
-	if (buf_len > 0 && BUFFER_SIZE > 0)
-		this_line = read_a_line(fd, this_line, remainder, buf);
+	if (BUFFER_SIZE > 0)
+		this_line = read_a_line(fd, this_line, buf, remainder);
 	nl = newline_seeker(this_line);
-	if (nl)
+	if (nl >= 0 && (size_t)nl != ft_strlen(this_line) - 1)
 	{
 		remainder = ft_substr(this_line, nl + 1, ft_strlen(this_line) - nl - 1);
 		this_line = ft_substr(this_line, 0, nl + 1);
@@ -37,7 +37,7 @@ char	*get_next_line(int fd)
 	return (this_line);
 }
 
-char	*read_a_line(int fd, char *line, char *rmd, char *buf)
+char	*read_a_line(int fd, char *line, char *buf, char *rmd)
 {
 	ssize_t	b_len;
 
@@ -50,7 +50,7 @@ char	*read_a_line(int fd, char *line, char *rmd, char *buf)
 	while (b_len > 0)
 	{
 		line = ft_strjoin(line, buf, b_len);
-		if (newline_seeker(line) > 0)
+		if (newline_seeker(line) >= 0)
 			break ;
 		if (b_len == BUFFER_SIZE)
 			b_len = read(fd, buf, BUFFER_SIZE);
