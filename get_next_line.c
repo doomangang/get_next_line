@@ -72,6 +72,8 @@ char	*read_a_line(int fd, char *line)
 			free(tmp);
 		}
 		free(buf);
+		if (newline_seeker(line) >= 0)
+			break ;
 		if (b_len == BUFFER_SIZE)
 			continue ;
 		if (b_len < 0)
