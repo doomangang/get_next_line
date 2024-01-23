@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:00:42 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/23 21:22:09 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/23 22:57:41 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 char	*get_next_line(int fd);
 char	*read_a_line(int fd, char *line);
+ssize_t	join_the_buf(int fd, char **line_adr);
 ssize_t	newline_seeker(char *s);
 size_t	ft_strlen(char *s);
 char	*ft_substr(char *s, unsigned int start, size_t len);
