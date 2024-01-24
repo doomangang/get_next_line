@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/23 23:38:32 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:35:11 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,72 +14,74 @@
 
 char	*get_next_line(int fd)
 {
-	char		*this_line;
-	char		*tmp;
+	char		*line;
 	static char	*remainder;
+	char		*tmp;
 	ssize_t		nl;
 
-	if (fd < 0 || read(fd, NULL, 0) == -1)
+	line = NULL;
+	if (fd >= 0 && read(fd, NULL, 0) != -1 && BUFFER_SIZE >= 0)
 	{
-		free(remainder);
-		remainder = NULL;
-		return (NULL);
-	}
-	this_line = NULL;
-	if (remainder)
-	{
-		this_line = ft_substr(remainder, 0, ft_strlen(remainder));
-		free(remainder);
-		remainder = NULL;
-	}
-	if (BUFFER_SIZE > 0)
-		this_line = read_a_line(fd, this_line);
-	nl = newline_seeker(this_line);
-	if (nl >= 0 && (size_t)nl <= ft_strlen(this_line) - 1)
-	{
-		tmp = this_line;
-		remainder = ft_substr(this_line, nl + 1, ft_strlen(this_line) - nl - 1);
-		this_line = ft_substr(tmp, 0, nl + 1);
-		if (!this_line)
-		{
-			free(remainder);
-			remainder = NULL;
-		}
-		free(tmp);
-	}
-	return (this_line);
-}
-
-char	*read_a_line(int fd, char *line)
-{
-	char	*buf;
-	char	*tmp;
-	ssize_t	b_len;
-
-	while (42)
-	{
-		buf = (char *)malloc(sizeof(char) * BUFFER_SIZE);
-		if (!buf)
-		{
-			free(line);
-			return (0);
-		}
-		b_len = read(fd, buf, BUFFER_SIZE);
-		if (b_len > 0)
+		nl = newline_seeker(read_a_line(fd, &line, &remainder));
+		if (nl >= 0 && (size_t)nl <= ft_strlen(line) - 1)
 		{
 			tmp = line;
-			line = ft_strjoin(line, buf, b_len);
+			remainder = ft_substr(line, nl + 1, ft_strlen(line) - nl - 1);
+			line = ft_substr(line, 0, nl + 1);
 			free(tmp);
 		}
-		free(buf);
-		if (newline_seeker(line) >= 0)
+	}
+	if (!line)
+	{
+		free(remainder);
+		remainder = NULL;
+	}
+	return (line);
+}
+
+char	*read_a_line(int fd, char **line, char **rmd)
+{
+	ssize_t	b_len;
+
+	if (*rmd)
+	{
+		*line = ft_substr(*rmd, 0, ft_strlen(*rmd));
+		free(*rmd);
+		*rmd = NULL;
+	}
+	while (42)
+	{
+		*line = join_the_buf(fd, *line, &b_len);
+		if (newline_seeker(*line) >= 0)
 			break ;
 		if (b_len == BUFFER_SIZE)
 			continue ;
 		if (b_len < 0)
-			free(line);
+			free(*line);
 		break ;
 	}
+	return (*line);
+}
+
+char	*join_the_buf(int fd, char *line, ssize_t *b_len)
+{
+	char	*buf;
+	char	*tmp;
+
+	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buf)
+	{
+		free(line);
+		return (0);
+	}
+	*b_len = read(fd, buf, BUFFER_SIZE);
+	if (*b_len > 0)
+	{
+		tmp = line;
+		line = ft_strjoin(line, buf, *b_len);
+		free(tmp);
+	}
+	free(buf);
 	return (line);
 }
 
