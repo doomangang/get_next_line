@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/25 20:30:48 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/25 21:21:49 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,38 @@ char	*get_next_line(int fd)
 {
 	static t_fdlist	*fd_list;
 	char			*line;
-	char			*remainder;
+	t_fdlist		*iter_fd;
+	t_fdlist		*t;
 	char			*tmp;
 	ssize_t			nl;
 
 	line = NULL;
+	iter_fd = NULL;
 	if (fd >= 0 && read(fd, NULL, 0) != -1 && BUFFER_SIZE >= 0)
 	{
-		remainder = fdseeker(fd, &fd_list);
-		nl = newline_seeker(read_a_line(fd, &line, &remainder)) + 1;
+		iter_fd = fdseeker(fd, &fd_list);
+		nl = newline_seeker(read_a_line(fd, &line, &(iter_fd->rmd))) + 1;
 		if (nl >= 1 && (size_t)nl - 1 <= ft_strlen(line) - 1)
 		{
 			tmp = line;
-			remainder = ft_strjoin(remainder, line + nl, ft_strlen(line) - nl);
+			fd_list->rmd = ft_strjoin(iter_fd->rmd, line + nl, ft_strlen(line) - nl);
 			line = ft_strjoin(0, line, nl);
 			free(tmp);
 		}
 		if (line)
 			return (line);
-		free(remainder);
 	}
 	else
 		ft_lstclear(&fd_list);
-	remainder = NULL;
+	free(iter_fd->rmd);
+	iter_fd->rmd = NULL;
+	if (!read(fd, NULL, 0))
+	{
+		t = iter_fd->next;
+		free(iter_fd->rmd);
+		free(iter_fd);
+		iter_fd = t;
+	}
 	return (line);
 }
 
