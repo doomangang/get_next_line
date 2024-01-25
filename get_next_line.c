@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/24 18:35:11 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/25 17:47:43 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ char	*get_next_line(int fd)
 	line = NULL;
 	if (fd >= 0 && read(fd, NULL, 0) != -1 && BUFFER_SIZE >= 0)
 	{
-		nl = newline_seeker(read_a_line(fd, &line, &remainder));
-		if (nl >= 0 && (size_t)nl <= ft_strlen(line) - 1)
+		nl = newline_seeker(read_a_line(fd, &line, &remainder)) + 1;
+		if (nl >= 1 && (size_t)nl - 1 <= ft_strlen(line) - 1)
 		{
 			tmp = line;
-			remainder = ft_substr(line, nl + 1, ft_strlen(line) - nl - 1);
-			line = ft_substr(line, 0, nl + 1);
+			remainder = ft_strjoin(remainder, line + nl, ft_strlen(line) - nl);
+			line = ft_strjoin(0, line, nl);
 			free(tmp);
 		}
 	}
@@ -45,7 +45,8 @@ char	*read_a_line(int fd, char **line, char **rmd)
 
 	if (*rmd)
 	{
-		*line = ft_substr(*rmd, 0, ft_strlen(*rmd));
+		if (ft_strlen(*rmd) > 0)
+			*line = ft_strjoin(0, *rmd, ft_strlen(*rmd));
 		free(*rmd);
 		*rmd = NULL;
 	}
