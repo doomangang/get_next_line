@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:07:31 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/25 17:47:43 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/25 20:39:52 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,18 @@ char	*get_next_line(int fd)
 	if (fd >= 0 && read(fd, NULL, 0) != -1 && BUFFER_SIZE >= 0)
 	{
 		nl = newline_seeker(read_a_line(fd, &line, &remainder)) + 1;
-		if (nl >= 1 && (size_t)nl - 1 <= ft_strlen(line) - 1)
+		if (nl >= 1 && (size_t)nl <= ft_strlen(line))
 		{
 			tmp = line;
 			remainder = ft_strjoin(remainder, line + nl, ft_strlen(line) - nl);
 			line = ft_strjoin(0, line, nl);
 			free(tmp);
 		}
+		if (line)
+			return (line);
 	}
-	if (!line)
-	{
-		free(remainder);
-		remainder = NULL;
-	}
+	free(remainder);
+	remainder = NULL;
 	return (line);
 }
 
