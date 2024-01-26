@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:18 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/25 21:21:08 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:08:12 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ typedef struct s_fdlist
 }					t_fdlist;
 
 char		*get_next_line(int fd);
-char		*read_a_line(int fd, char **line, char **rmd);
+char		*next_line(t_fdlist *fdlist);
+char		*read_a_line(int fd, char **line, char *rmd);
 char		*join_the_buf(int fd, char *line, ssize_t *b_len);
 ssize_t		newline_seeker(char *s);
 size_t		ft_strlen(char *s);

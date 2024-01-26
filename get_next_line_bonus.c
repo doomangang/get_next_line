@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/25 21:21:49 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/26 19:19:04 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,52 +15,56 @@
 char	*get_next_line(int fd)
 {
 	static t_fdlist	*fd_list;
+	t_fdlist		*itr;
+	t_fdlist		*tmp;
 	char			*line;
-	t_fdlist		*iter_fd;
-	t_fdlist		*t;
-	char			*tmp;
-	ssize_t			nl;
 
 	line = NULL;
-	iter_fd = NULL;
-	if (fd >= 0 && read(fd, NULL, 0) != -1 && BUFFER_SIZE >= 0)
+	itr = fdseeker(fd, &fd_list);
+	if (fd < 0 || read(fd, NULL, 0) == -1 || BUFFER_SIZE < 0)
 	{
-		iter_fd = fdseeker(fd, &fd_list);
-		nl = newline_seeker(read_a_line(fd, &line, &(iter_fd->rmd))) + 1;
-		if (nl >= 1 && (size_t)nl - 1 <= ft_strlen(line) - 1)
+		if (itr)
 		{
-			tmp = line;
-			fd_list->rmd = ft_strjoin(iter_fd->rmd, line + nl, ft_strlen(line) - nl);
-			line = ft_strjoin(0, line, nl);
-			free(tmp);
+			tmp = itr->next;
+			free(itr->rmd);
+			itr->rmd = NULL;
+			free(itr);
+			itr = tmp;
 		}
-		if (line)
-			return (line);
 	}
 	else
-		ft_lstclear(&fd_list);
-	free(iter_fd->rmd);
-	iter_fd->rmd = NULL;
-	if (!read(fd, NULL, 0))
+		line = next_line(fdseeker(fd, &fd_list));
+	return (line);
+}
+
+char	*next_line(int fd, char *rmd)
+{
+	char		*line;
+	char		*tmp;
+	ssize_t		nl;
+
+	line = NULL;
+	nl = newline_seeker(read_a_line(fd, &line, rmd)) + 1;
+	free(fdlist->rmd);
+	fdlist->rmd = NULL;
+	if (nl >= 1 && (size_t)nl <= ft_strlen(line))
 	{
-		t = iter_fd->next;
-		free(iter_fd->rmd);
-		free(iter_fd);
-		iter_fd = t;
+		tmp = line;
+		fdlist->rmd = ft_strjoin(fdlist->rmd, line + nl, ft_strlen(line) - nl);
+		line = ft_strjoin(0, line, nl);
+		free(tmp);
 	}
 	return (line);
 }
 
-char	*read_a_line(int fd, char **line, char **rmd)
+char	*read_a_line(int fd, char **line, char *rmd)
 {
 	ssize_t	b_len;
 
-	if (*rmd)
+	if (rmd)
 	{
-		if (ft_strlen(*rmd) > 0)
-			*line = ft_strjoin(0, *rmd, ft_strlen(*rmd));
-		free(*rmd);
-		*rmd = NULL;
+		if (ft_strlen(rmd) > 0)
+			*line = ft_strjoin(0, rmd, ft_strlen(rmd));
 	}
 	while (42)
 	{

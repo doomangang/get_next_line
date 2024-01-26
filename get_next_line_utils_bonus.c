@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:21 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/25 21:18:07 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/26 21:16:31 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,25 +84,18 @@ t_fdlist	*fdseeker(int fd, t_fdlist **list)
 		else
 			(*list) = new;
 	}
-	else
-	{
-		ft_lstclear((list));
-		free(*list);
-	}
-	return (*list);
+	return (new);
 }
 
-void	ft_lstclear(t_fdlist **lst)
+void	ft_lstdelone(t_fdlist *lst)
 {
 	t_fdlist	*tmp;
 
 	if (!(lst))
 		return ;
-	while (*lst)
-	{
-		tmp = (*lst)->next;
-		free((*lst)->rmd);
-		free(*lst);
-		*lst = tmp;
-	}
+	tmp = lst->next;
+	free(lst->rmd);
+	lst->rmd = NULL;
+	free(lst);
+	lst = tmp;
 }
