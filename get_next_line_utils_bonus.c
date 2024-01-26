@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:21 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/26 21:16:31 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/27 02:06:05 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,17 @@ void	*ft_memcpy(void *dst, void *src, size_t n)
 t_fdlist	*fdseeker(int fd, t_fdlist **list)
 {
 	t_fdlist	*new;
+	t_fdlist	*tmp;
 
-	while ((*list) && (*list)->next)
+	tmp = *list;
+	while (tmp)
 	{
-		if ((*list)->fd == fd)
-			return (*list);
-		*list = (*list)->next;
+		if (tmp->fd == fd)
+			return (tmp);
+		if (tmp->next)
+			tmp = tmp->next;
+		else
+			break;
 	}
 	new = (t_fdlist *)malloc(sizeof(t_fdlist));
 	if (new)
@@ -79,11 +84,11 @@ t_fdlist	*fdseeker(int fd, t_fdlist **list)
 		new->fd = fd;
 		new->rmd = NULL;
 		new->next = NULL;
-		if (*list)
-			(*list)->next = new;
-		else
-			(*list) = new;
 	}
+	if (tmp)
+		tmp->next = new;
+	else
+		tmp = new;
 	return (new);
 }
 
