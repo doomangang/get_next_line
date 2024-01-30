@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:21 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/30 22:48:52 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/30 23:03:19 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	ft_lstdelone(int fd, t_fdlist *lst)
 	while (lst)
 	{
 		if (lst->next->fd == fd)
-			break;
+			break ;
 		if (lst->next)
 			lst = lst->next;
 		else
