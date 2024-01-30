@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:21 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/27 02:06:05 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:48:52 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,21 @@ void	*ft_memcpy(void *dst, void *src, size_t n)
 	return (dst);
 }
 
-t_fdlist	*fdseeker(int fd, t_fdlist **list)
+t_fdlist	*fdseeker(int fd, t_fdlist *lst)
 {
 	t_fdlist	*new;
-	t_fdlist	*tmp;
 
-	tmp = *list;
-	while (tmp)
+	if (lst->next)
 	{
-		if (tmp->fd == fd)
-			return (tmp);
-		if (tmp->next)
-			tmp = tmp->next;
-		else
-			break;
+		while (lst)
+		{
+			if (lst->fd == fd)
+				return (lst);
+			if (lst->next)
+				lst = lst->next;
+			else
+				break ;
+		}
 	}
 	new = (t_fdlist *)malloc(sizeof(t_fdlist));
 	if (new)
@@ -85,22 +86,28 @@ t_fdlist	*fdseeker(int fd, t_fdlist **list)
 		new->rmd = NULL;
 		new->next = NULL;
 	}
-	if (tmp)
-		tmp->next = new;
-	else
-		tmp = new;
+	lst->next = new;
 	return (new);
 }
 
-void	ft_lstdelone(t_fdlist *lst)
+void	ft_lstdelone(int fd, t_fdlist *lst)
 {
 	t_fdlist	*tmp;
 
-	if (!(lst))
+	if (!lst)
 		return ;
-	tmp = lst->next;
-	free(lst->rmd);
-	lst->rmd = NULL;
-	free(lst);
+	while (lst)
+	{
+		if (lst->next->fd == fd)
+			break;
+		if (lst->next)
+			lst = lst->next;
+		else
+			break ;
+	}
+	tmp = lst->next->next;
+	free(lst->next->rmd);
+	lst->next->rmd = NULL;
+	free(lst->next);
 	lst = tmp;
 }

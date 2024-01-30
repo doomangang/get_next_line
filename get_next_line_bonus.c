@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/27 02:06:22 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:48:27 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,45 @@
 
 char	*get_next_line(int fd)
 {
-	static t_fdlist	*fd_list;
+	static t_fdlist	*head;
 	t_fdlist		*tmp;
 	char			*line;
 
 	line = NULL;
-	if (fd < 0 || read(fd, NULL, 0) == -1 || BUFFER_SIZE < 0)
+	if (!head)
 	{
-		while (fd_list)
+		head = (t_fdlist *)malloc(sizeof(t_fdlist));
+		if (!head)
+			return (line);
+		head->fd = -1;
+		head->next = NULL;
+	}
+	if (fd < 0 || read(fd, NULL, 0) == -1 || BUFFER_SIZE <= 0)
+	{
+		while (head)
 		{
-			tmp = fd_list->next;
-			ft_lstdelone(fd_list);
-			fd_list = tmp;
+			tmp = head->next;
+			ft_lstdelone(head->fd, head);
+			head = tmp;
 		}
 	}
 	else
-		line = next_line(fdseeker(fd, &fd_list));
+		line = next_line(fd, head);
 	return (line);
 }
 
-char	*next_line(t_fdlist *list)
+char	*next_line(int fd, t_fdlist *head)
 {
+	t_fdlist	*list;
 	char		*line;
 	char		*tmp;
 	ssize_t		nl;
 
 	line = NULL;
-	nl = newline_seeker(read_a_line(list->fd, &line, list->rmd)) + 1;
+	nl = 0;
+	list = fdseeker(fd, head);
+	if (list)
+		nl = newline_seeker(read_a_line(list->fd, &line, list->rmd)) + 1;
 	free(list->rmd);
 	list->rmd = NULL;
 	if (nl >= 1 && (size_t)nl <= ft_strlen(line))
@@ -51,10 +63,7 @@ char	*next_line(t_fdlist *list)
 		free(tmp);
 	}
 	if (!line)
-	{
-		free(list->rmd);
-		list->rmd = NULL;
-	}
+		ft_lstdelone(fd, head);
 	return (line);
 }
 
