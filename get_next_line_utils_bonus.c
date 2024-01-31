@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:21 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/31 18:49:19 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:51:24 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,13 @@ void	ft_lstdelone(int fd, t_fdlist **head)
 	t_fdlist	*del;
 
 	ptr = *head;
+	del = NULL;
 	if (ptr->fd == fd)
 	{
 		*head = ptr->next;
 		del = ptr;
 	}
-	while (ptr->fd != fd && ptr)
+	while (ptr->fd != fd && ptr && ptr->next)
 	{
 		if (ptr->next->fd == fd)
 		{
@@ -108,7 +109,9 @@ void	ft_lstdelone(int fd, t_fdlist **head)
 		}
 		ptr = ptr->next;
 	}
-	if (del->rmd)
+	if (del)
+	{
 		free(del->rmd);
-	free(del);
+		free(del);
+	}
 }
