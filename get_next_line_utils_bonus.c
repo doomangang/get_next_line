@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:21 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/30 23:03:19 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/31 18:49:19 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,17 +67,14 @@ t_fdlist	*fdseeker(int fd, t_fdlist *lst)
 {
 	t_fdlist	*new;
 
-	if (lst->next)
+	while (lst)
 	{
-		while (lst)
-		{
-			if (lst->fd == fd)
-				return (lst);
-			if (lst->next)
-				lst = lst->next;
-			else
-				break ;
-		}
+		if (lst->fd == fd)
+			return (lst);
+		if (lst->next)
+			lst = lst->next;
+		else
+			break ;
 	}
 	new = (t_fdlist *)malloc(sizeof(t_fdlist));
 	if (new)
@@ -90,24 +87,28 @@ t_fdlist	*fdseeker(int fd, t_fdlist *lst)
 	return (new);
 }
 
-void	ft_lstdelone(int fd, t_fdlist *lst)
+void	ft_lstdelone(int fd, t_fdlist **head)
 {
-	t_fdlist	*tmp;
+	t_fdlist	*ptr;
+	t_fdlist	*del;
 
-	if (!lst)
-		return ;
-	while (lst)
+	ptr = *head;
+	if (ptr->fd == fd)
 	{
-		if (lst->next->fd == fd)
-			break ;
-		if (lst->next)
-			lst = lst->next;
-		else
-			break ;
+		*head = ptr->next;
+		del = ptr;
 	}
-	tmp = lst->next->next;
-	free(lst->next->rmd);
-	lst->next->rmd = NULL;
-	free(lst->next);
-	lst = tmp;
+	while (ptr->fd != fd && ptr)
+	{
+		if (ptr->next->fd == fd)
+		{
+			del = ptr->next;
+			ptr->next = ptr->next->next;
+			break ;
+		}
+		ptr = ptr->next;
+	}
+	if (del->rmd)
+		free(del->rmd);
+	free(del);
 }

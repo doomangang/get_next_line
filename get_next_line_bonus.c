@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/30 22:48:27 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/31 18:48:37 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 char	*get_next_line(int fd)
 {
 	static t_fdlist	*head;
-	t_fdlist		*tmp;
 	char			*line;
 
 	line = NULL;
@@ -24,20 +23,18 @@ char	*get_next_line(int fd)
 		head = (t_fdlist *)malloc(sizeof(t_fdlist));
 		if (!head)
 			return (line);
-		head->fd = -1;
+		head->fd = fd;
 		head->next = NULL;
+		head->rmd = NULL;
 	}
-	if (fd < 0 || read(fd, NULL, 0) == -1 || BUFFER_SIZE <= 0)
-	{
-		while (head)
-		{
-			tmp = head->next;
-			ft_lstdelone(head->fd, head);
-			head = tmp;
-		}
-	}
+	if (read(fd, NULL, 0) == -1 || BUFFER_SIZE <= 0)
+		ft_lstdelone(fd, &head);
 	else
+	{
 		line = next_line(fd, head);
+		if (!line)
+		ft_lstdelone(fd, &head);
+	}
 	return (line);
 }
 
@@ -62,8 +59,6 @@ char	*next_line(int fd, t_fdlist *head)
 		line = ft_strjoin(0, line, nl);
 		free(tmp);
 	}
-	if (!line)
-		ft_lstdelone(fd, head);
 	return (line);
 }
 

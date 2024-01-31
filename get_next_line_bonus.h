@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:18 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/30 22:40:12 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/31 16:29:45 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ size_t		ft_strlen(char *s);
 char		*ft_strjoin(char *s1, char *s2, ssize_t blen);
 void		*ft_memcpy(void *dst, void *src, size_t n);
 t_fdlist	*fdseeker(int fd, t_fdlist *list);
-void		ft_lstdelone(int fd, t_fdlist *lst);
+void		ft_lstdelone(int fd, t_fdlist **head);
 
 #endif
