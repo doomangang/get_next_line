@@ -6,7 +6,7 @@
 /*   By: jihyjeon < jihyjeon@student.42seoul.kr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 15:26:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/01/31 18:48:37 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/01/31 20:11:54 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_next_line(int fd)
 	{
 		line = next_line(fd, head);
 		if (!line)
-		ft_lstdelone(fd, &head);
+			ft_lstdelone(fd, &head);
 	}
 	return (line);
 }
